@@ -9,9 +9,10 @@ module.exports = {
   networks: {
     ganache: {
       host: "127.0.0.1", // Localhost (default: none)
-      port: 8545, // Standard Ethereum port (default: none)
+      port: 7545, // Standard Ethereum port (default: none)
       network_id: "5777", // Any network (default: none)
       disableConfirmationListener: true,
+      gasPrice: 30000000000,
     },
     maticmumbai: {
       provider: () => new HDWalletProvider(mnemonic, maticmumbai_rpc_url),
@@ -39,7 +40,13 @@ module.exports = {
   },
   compilers: {
     solc: {
-      version: "^0.8.9",
+      version: "^0.8.11",
+      settings: {
+        optimizer: {
+          enabled: true,
+          runs: 1500,
+        },
+      },
     },
   },
 };
