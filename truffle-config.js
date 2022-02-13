@@ -1,6 +1,7 @@
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const fs = require("fs");
 const mnemonic = fs.readFileSync(".secret").toString().trim();
+const mainnet_rpc_url = "https://mainnet.infura.io/v3/b844db49cee74597972b0dffb11fefda";
 const rinkeby_rpc_url = "https://rinkeby.infura.io/v3/b844db49cee74597972b0dffb11fefda";
 const maticmainnet_rpc_url = "https://rpc-mainnet.maticvigil.com";
 const maticmumbai_rpc_url = "https://matic-mumbai.chainstacklabs.com/";
@@ -32,7 +33,14 @@ module.exports = {
       provider: () => new HDWalletProvider(mnemonic, rinkeby_rpc_url),
       network_id: 4,
       gas: 4500000,
-      gasPrice: 28000000000,
+      gasPrice: 1000000000,
+    },
+    mainnet: {
+      provider: () => new HDWalletProvider(mnemonic, mainnet_rpc_url),
+      network_id: 1,
+      gas: 4500000,
+      gasPrice: 1000000000,
+//    gasPrice: 48648877532,
     },
   },
   mocha: {
