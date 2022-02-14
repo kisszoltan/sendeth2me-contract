@@ -1,27 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.11 <0.9.0;
 
-library SafishMath {
-    function sub(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a - b;
-    }
-
-    function mul(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a * b;
-    }
-
-    function div(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a / b;
-    }
-}
-
 contract SendEth2Me {
-    using SafishMath for uint256;
-    address private _owner;
-
-    constructor() {
-        _transferOwnership(msg.sender);
-    }
+    address private _owner = msg.sender;
 
     modifier onlyOwner() {
         require(_owner == msg.sender, "Ownable: caller is not the owner");
@@ -50,17 +31,16 @@ contract SendEth2Me {
 
         uint256 amount;
         if (msg.value <= 100) {
-            amount = msg.value.sub(1);
+            amount = msg.value - 1;
         } else {
-            amount = _99(msg.value);
+            amount = _percent99(msg.value);
         }
-
         payable(recipient).transfer(amount);
     }
-
-    function _99(uint256 amount) private pure returns (uint256) {
-        uint256 onePercent = amount.div(100);
-        return amount.sub(onePercent);
+    
+    function _percent99(uint256 amount) private pure returns (uint256) {
+        uint256 onePercent = amount / 100;
+        return amount - onePercent;
     }
 
     function withdraw() public onlyOwner {

@@ -1,8 +1,22 @@
+const Web3 = require("web3");
+const web3 = new Web3();
+
+const getEnv = (env) => {
+  const value = process.env[env];
+  if (typeof value === "undefined") {
+    throw new Error(`${env} has not been set.`);
+  }
+  return value;
+};
+const mainnet_rpc_url = getEnv("ETH_MAINNET_URL");
+const mainnet_network_id = getEnv("ETH_MAINNET_NETWORK_ID");
+
+const rinkeby_rpc_url = getEnv("ETH_RINKEBY_URL");
+const rinkeby_network_id = getEnv("ETH_RINKEBY_NETWORK_ID");
+
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const fs = require("fs");
 const mnemonic = fs.readFileSync(".secret").toString().trim();
-const mainnet_rpc_url = "https://mainnet.infura.io/v3/b844db49cee74597972b0dffb11fefda";
-const rinkeby_rpc_url = "https://rinkeby.infura.io/v3/b844db49cee74597972b0dffb11fefda";
 const maticmainnet_rpc_url = "https://rpc-mainnet.maticvigil.com";
 const maticmumbai_rpc_url = "https://matic-mumbai.chainstacklabs.com/";
 
@@ -13,7 +27,7 @@ module.exports = {
       port: 7545, // Standard Ethereum port (default: none)
       network_id: "5777", // Any network (default: none)
       disableConfirmationListener: true,
-      gasPrice: 30000000000,
+      gasPrice: web3.utils.toWei("20", "gwei"),
     },
     maticmumbai: {
       provider: () => new HDWalletProvider(mnemonic, maticmumbai_rpc_url),
@@ -31,16 +45,13 @@ module.exports = {
     },
     rinkeby: {
       provider: () => new HDWalletProvider(mnemonic, rinkeby_rpc_url),
-      network_id: 4,
-      gas: 4500000,
-      gasPrice: 1000000000,
+      network_id: rinkeby_network_id,
+      gasPrice: web3.utils.toWei("10", "gwei"),
     },
     mainnet: {
       provider: () => new HDWalletProvider(mnemonic, mainnet_rpc_url),
-      network_id: 1,
-      gas: 4500000,
-      gasPrice: 1000000000,
-//    gasPrice: 48648877532,
+      network_id: mainnet_network_id,
+      gasPrice: web3.utils.toWei("25", "gwei"),
     },
   },
   mocha: {
