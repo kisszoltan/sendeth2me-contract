@@ -27,7 +27,7 @@ module.exports = {
       port: 7545, // Standard Ethereum port (default: none)
       network_id: "5777", // Any network (default: none)
       disableConfirmationListener: true,
-      gasPrice: web3.utils.toWei("20", "gwei"),
+      gasPrice: web3.utils.toWei("30", "gwei"),
     },
     maticmumbai: {
       provider: () => new HDWalletProvider(mnemonic, maticmumbai_rpc_url),
@@ -51,7 +51,7 @@ module.exports = {
     mainnet: {
       provider: () => new HDWalletProvider(mnemonic, mainnet_rpc_url),
       network_id: mainnet_network_id,
-      gasPrice: web3.utils.toWei("25", "gwei"),
+      gasPrice: web3.utils.toWei("28", "gwei"),
     },
   },
   mocha: {
@@ -63,7 +63,8 @@ module.exports = {
       settings: {
         optimizer: {
           enabled: true,
-          runs: 1500,
+          //runs: 1, // optimize for deployment
+          runs: 4294967295, // optimize for transactions
         },
       },
     },
