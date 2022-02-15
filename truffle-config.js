@@ -14,6 +14,9 @@ const mainnet_network_id = getEnv("ETH_MAINNET_NETWORK_ID");
 const rinkeby_rpc_url = getEnv("ETH_RINKEBY_URL");
 const rinkeby_network_id = getEnv("ETH_RINKEBY_NETWORK_ID");
 
+const ropsten_rpc_url = getEnv("ETH_ROPSTEN_URL");
+const ropsten_network_id = getEnv("ETH_ROPSTEN_NETWORK_ID");
+
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 const fs = require("fs");
 const mnemonic = fs.readFileSync(".secret").toString().trim();
@@ -42,6 +45,11 @@ module.exports = {
       confirmations: 2,
       timeoutBlocks: 200,
       skipDryRun: false,
+    },
+    ropsten: {
+      provider: () => new HDWalletProvider(mnemonic, ropsten_rpc_url),
+      network_id: ropsten_network_id,
+      gasPrice: web3.utils.toWei("30", "gwei"),
     },
     rinkeby: {
       provider: () => new HDWalletProvider(mnemonic, rinkeby_rpc_url),
