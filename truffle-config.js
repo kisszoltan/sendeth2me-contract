@@ -11,6 +11,9 @@ const getEnv = (env) => {
 const mainnet_rpc_url = getEnv("ETH_MAINNET_URL");
 const mainnet_network_id = getEnv("ETH_MAINNET_NETWORK_ID");
 
+const kovan_rpc_url = getEnv("ETH_KOVAN_URL");
+const kovan_network_id = getEnv("ETH_KOVAN_NETWORK_ID");
+
 const rinkeby_rpc_url = getEnv("ETH_RINKEBY_URL");
 const rinkeby_network_id = getEnv("ETH_RINKEBY_NETWORK_ID");
 
@@ -18,9 +21,10 @@ const ropsten_rpc_url = getEnv("ETH_ROPSTEN_URL");
 const ropsten_network_id = getEnv("ETH_ROPSTEN_NETWORK_ID");
 
 const HDWalletProvider = require("@truffle/hdwallet-provider");
+
 const fs = require("fs");
 const mnemonic = fs.readFileSync(".secret").toString().trim();
-const maticmainnet_rpc_url = "https://rpc-mainnet.maticvigil.com";
+const maticmainnet_rpc_url = "https://polygon-rpc.com/";
 const maticmumbai_rpc_url = "https://matic-mumbai.chainstacklabs.com/";
 
 module.exports = {
@@ -30,21 +34,27 @@ module.exports = {
       port: 7545, // Standard Ethereum port (default: none)
       network_id: "5777", // Any network (default: none)
       disableConfirmationListener: true,
-      gasPrice: web3.utils.toWei("30", "gwei"),
+      gasPrice: web3.utils.toWei("20", "gwei"),
     },
-    maticmumbai: {
+    mumbai: {
       provider: () => new HDWalletProvider(mnemonic, maticmumbai_rpc_url),
       network_id: 80001,
       confirmations: 2,
       timeoutBlocks: 200,
       skipDryRun: false,
     },
-    maticmainnet: {
+    matic: {
       provider: () => new HDWalletProvider(mnemonic, maticmainnet_rpc_url),
       network_id: 137,
       confirmations: 2,
-      timeoutBlocks: 200,
-      skipDryRun: false,
+      timeoutBlocks: 50,
+      gasPrice: web3.utils.toWei("40", "gwei"),
+      skipDryRun: true,
+    },
+    kovan: {
+      provider: () => new HDWalletProvider(mnemonic, kovan_rpc_url),
+      network_id: kovan_network_id,
+      gasPrice: web3.utils.toWei("30", "gwei"),
     },
     ropsten: {
       provider: () => new HDWalletProvider(mnemonic, ropsten_rpc_url),
@@ -59,7 +69,9 @@ module.exports = {
     mainnet: {
       provider: () => new HDWalletProvider(mnemonic, mainnet_rpc_url),
       network_id: mainnet_network_id,
-      gasPrice: web3.utils.toWei("28", "gwei"),
+      gas: 600000,
+      gasPrice: web3.utils.toWei("30", "gwei"),
+      skipDryRun: true,
     },
   },
   mocha: {
@@ -76,5 +88,8 @@ module.exports = {
         },
       },
     },
+  },
+  db: {
+    enabled: true,
   },
 };

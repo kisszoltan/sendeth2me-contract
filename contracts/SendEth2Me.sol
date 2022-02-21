@@ -2,7 +2,7 @@
 pragma solidity >=0.8.11 <0.9.0;
 
 contract SendEth2Me {
-    address private _owner = msg.sender;
+    address private _owner;
 
     modifier onlyOwner() {
         require(_owner == msg.sender, "Caller is not the owner");
@@ -25,15 +25,15 @@ contract SendEth2Me {
         _;
     }
 
+    constructor() {
+        _owner = msg.sender;
+    }
+
     function transferOwnership(address newOwner)
         public
         onlyOwner
         notZero(newOwner)
     {
-        _transferOwnership(newOwner);
-    }
-
-    function _transferOwnership(address newOwner) private {
         _owner = newOwner;
     }
 
@@ -51,11 +51,13 @@ contract SendEth2Me {
             }
         }
 
-        payable(recipient).transfer(amount);
+        (bool success, ) = recipient.call{value: amount}("");
+        require(success, "Sending amount to recipient failed");
     }
 
-    function withdraw() public onlyOwner hasBalance {
+    function withdraw() public payable onlyOwner hasBalance {
         uint256 contractBalance = address(this).balance;
-        payable(_owner).transfer(contractBalance);
+        (bool success, ) = _owner.call{value: contractBalance}("");
+        require(success, "Withdraw contract balance failed");
     }
 }
